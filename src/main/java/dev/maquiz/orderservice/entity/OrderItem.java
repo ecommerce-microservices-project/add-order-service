@@ -3,6 +3,7 @@ package dev.maquiz.orderservice.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity(name = "order_items")
 public class OrderItem {
@@ -21,6 +22,9 @@ public class OrderItem {
 
     @Column(name = "price")
     private BigDecimal price;
+
+//    @Transient
+//    private Product product;
 
     public OrderItem() {
     }
@@ -72,4 +76,12 @@ public class OrderItem {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+//    public Product getProduct() {
+//        return product;
+//    }
+//
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
 }

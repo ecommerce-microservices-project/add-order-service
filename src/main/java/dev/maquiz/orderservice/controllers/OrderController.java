@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class OrderController {
@@ -26,21 +28,27 @@ public class OrderController {
 
     @PostMapping("/orders")
     public ResponseEntity<Order> createOrder(@RequestBody OrderInputDto orderInputDto ){
+        //Save Order
        Order order = new Order();
        order.setStatus(OrderStatus.CREATED);
        order.setCreatedAt(LocalDateTime.now());
-       Order added = repo.save(order);
+       Order savedOrder = repo.save(order);
 
        //Save order items
+        ArrayList<OrderItem> orderItemsList = new ArrayList<>();
+
         orderInputDto.getItems().forEach(item->{
             OrderItem orderItem = new OrderItem();
             orderItem.setOrderId(order.getId());
             orderItem.setProductId(item.getProductId());
             orderItem.setQuantity(item.getQuantity());
             orderItem.setPrice(item.getPrice());
-            orderItemRepository.save(orderItem);
+            OrderItem savedOrderItem = orderItemRepository.save(orderItem);
+            orderItemsList.add(savedOrderItem);
         });
 
-       return new ResponseEntity<>(added, HttpStatus.CREATED);
+        savedOrder.setItems(orderItemsList);
+
+       return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
     }
 }
